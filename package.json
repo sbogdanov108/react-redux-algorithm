@@ -1,0 +1,23 @@
+{
+  "name": "react-redux-algorithm",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "watchify src/app.js -o public/bundle.js -t [ babelify --presets [ react es2015 ] ]",
+    "server": "live-server --port=3000 --entry-file=src/index.html --watch=public",
+    "start": "concurrently \"npm run build\" \"npm run server\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-react": "^6.23.0",
+    "babelify": "^7.3.0",
+    "live-server": "^1.2.0",
+    "watchify": "^3.9.0"
+  },
+  "devDependencies": {
+    "concurrently": "^3.4.0"
+  }
+}

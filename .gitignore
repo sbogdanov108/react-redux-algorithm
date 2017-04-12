@@ -123,4 +123,4 @@ typings/
 # dotenv environment variables file
 .env
 
-
+/public/bundle.js
