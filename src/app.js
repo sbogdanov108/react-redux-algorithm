@@ -1,4 +1,13 @@
 /*
+ * Actions
+ * */
+
+const addPost = name => ({
+  type: 'ADD_POST',
+  data: name
+});
+
+/*
 * Reducers
 * */
 
@@ -14,7 +23,7 @@ const posts = (state, action) => {
         id: +new Date // bad practice :)
       });
 
-      // Возвращаем обновленное состояние данных приложения в нужном нам формате
+      // Возвращаем новое состояние данных приложения в нужном нам формате
       return state.concat([newCard]);
 
     default:
