@@ -1,21 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {createStore, combineReducers} from 'redux';
-
-/*
- * Action creators
- * */
-import {addPost} from './actions';
+import {Provider} from 'react-redux';
 
 /*
 * Reducers
 * */
 import * as reducers from './reducers';
-
-/*
-* Store
-* */
-const store = createStore(combineReducers(reducers));
 
 /*
 * Главный компонент
@@ -27,23 +18,16 @@ import App from './components/App';
 * */
 import Content from './components/Content';
 
-// При каждом изменении store, будет запускаться эта функция
-function run() {
-  // Получаем данные, которые передадим в компонент Content
-  let state = store.getState();
+/*
+ * Store
+ * */
+const store = createStore(combineReducers(reducers));
 
-  ReactDOM.render(
+ReactDOM.render(
+  <Provider store={store}>
     <App>
-      <Content
-        posts={state.posts}
-        addPost={text => store.dispatch(addPost(text))}
-      />
-    </App>,
-    document.getElementById('root')
-  );
-}
-
-run();
-
-// Подписываемся на изменения store, чтобы запускать run()
-store.subscribe(run);
+      <Content/>
+    </App>
+  </Provider>,
+  document.getElementById('root')
+);

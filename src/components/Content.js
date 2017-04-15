@@ -1,5 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {connect} from 'react-redux';
+import { addPost } from '../actions';
+
+// Какие свойства будут связаны между store и компонентом
+// state destruction
+const mapStateToProps = ({posts}) => ({
+  posts
+});
+
+// Какие actions будут доступны компоненту
+const mapDispatchToProps = (dispatch) => ({
+  addPost: text => dispatch(addPost(text))
+});
 
 class Content extends React.Component {
   render() {
@@ -29,4 +42,5 @@ class Content extends React.Component {
   }
 }
 
-export default Content;
+// Поможет определить, какие свойства и actions будут у нашего компонента
+export default connect(mapStateToProps, mapDispatchToProps)(Content);
