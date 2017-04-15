@@ -1,10 +1,11 @@
 /*
- * Actions
+ * Action creators
  * */
 
-const addPost = name => ({
+// Возвращает объект с типом действия и любыми дополнительными данными, которые нам нужны
+const addPost = text => ({
   type: 'ADD_POST',
-  data: name
+  text
 });
 
 /*
@@ -18,13 +19,11 @@ const addPost = name => ({
 const posts = (state, action) => {
   switch(action.type) {
     case 'ADD_POST':
-      // Создаем новый объект, на основе существующих
-      let newCard = Object.assign({}, action.data, {
-        id: +new Date // bad practice :)
-      });
+      let id = +new Date; // bad practice :)
 
+      // Формируем новый массив объектов, в котором будут объединены все необходимые нам данные
       // Возвращаем новое состояние данных приложения в нужном нам формате
-      return state.concat([newCard]);
+      return [...state, Object.assign({}, action.text, {id})];
 
     default:
       return state || [];
@@ -46,7 +45,8 @@ const store = Redux.createStore(Redux.combineReducers({
 const App = (props) => {
   return (
     <div className='app'>
-      <h1>Привет, React & Redux!</h1>
+      {/* Вывод дочерних компонентов */}
+      {props.children}
     </div>
   )
 };
@@ -55,7 +55,51 @@ const App = (props) => {
 * Дочерний компонент
 * */
 
-ReactDOM.render(
-  <App></App>,
-  document.getElementById('root')
-);
+class Content extends React.Component {
+  render() {
+    let {posts} = this.props; // destruction нужных нам свойств из объекта props
+
+    return (
+      <div className="sidebar">
+        <h2>Все посты</h2>
+
+        <ul>
+          {posts.map((post, i) =>
+            <li key={i}>{post.text}</li>
+          )}
+        </ul>
+
+        <input ref="add" onKeyPress={this.createPost.bind(this)} type="text" />
+      </div>
+    )
+  }
+
+  createPost(event) {
+    // Если это не клавиша enter, то прерываем работу
+    if(event.which !== 13) return;
+
+    let text = ReactDOM.findDOMNode(this.refs.add).value;
+    this.props.addPost({text});
+  }
+}
+
+// При каждом изменении store, будет запускаться эта функция
+function run() {
+  // Получаем данные, которые передадим в компонент Content
+  let state = store.getState();
+
+  ReactDOM.render(
+    <App>
+      <Content
+        posts={state.posts}
+        addPost={text => store.dispatch(addPost(text))}
+      />
+    </App>,
+    document.getElementById('root')
+  );
+}
+
+run();
+
+// Подписываемся на изменения store, чтобы запускать run()
+store.subscribe(run);
